@@ -5,6 +5,9 @@ Parameters:
   EnvironmentName:
     Description: An environment name that will be prefixed to resource names
     Type: String
+  EnvBucketName:
+    Description: The name of the S3 bucket for the environment
+    Type: String
 
 Resources:
   # Add your resources here
@@ -50,6 +53,29 @@ Resources:
             sudo apt-get update -y
             sudo apt-get install nginx -y
             sudo service nginx start
+            WEB_DIR="/var/www/html"
+
+            # Create the index.html file
+            cat <<EOF > index.html
+            <!DOCTYPE html>
+            <html>
+            <head>
+              <title> It works! Udagram, Udacity </title>
+            </head>
+            <body>
+              <h1> It works! Udagram, Udacity </h1>
+              <p> Hosted by Nginx </p>
+            </body>
+            </html>
+            EOF
+
+            # Copy the index.html to the web directory
+            sudo rm -r $WEB_DIR/index.*
+            sudo cp index.html $WEB_DIR
+
+            # Reload nginx to pick up the new index.html file
+            sudo systemctl reload nginx
+        
         ImageId: ami-0557a15b87f6559cf
         SecurityGroupIds:
           - !Ref WebServerSecGroup
@@ -111,7 +137,7 @@ Resources:
   WebS3Bucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: "udagram-project-s3-mg-20260112"
+      BucketName: !Sub "${EnvBucketName}-s3-mg-20260112"
       AccessControl: Private
       VersioningConfiguration:
         Status: Enabled

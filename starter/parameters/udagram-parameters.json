@@ -2,5 +2,9 @@
 	{
 		"ParameterKey": "EnvironmentName",
 		"ParameterValue": "UdagramProject"
+	},
+	{
+		"ParameterKey": "EnvBucketName",
+		"ParameterValue": "udagram-bucket"
 	}
 ]
