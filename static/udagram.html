@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Udagram SPA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #1f2933, #111827);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+    }
+
+    .app {
+      text-align: center;
+      padding: 2rem 3rem;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    p {
+      margin-top: 0.75rem;
+      opacity: 0.85;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="app"></div>
+
+  <script>
+    // Simple SPA bootstrap
+    function render() {
+      const app = document.getElementById("app");
+      app.innerHTML = `
+        <h1>It works! Udagram, Udacity,</h1>
+        <p>Single Page Application loaded successfully.</p>
+      `;
+    }
+
+    // Initial render
+    render();
+  </script>
+</body>
+</html>
