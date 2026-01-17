@@ -51,5 +51,6 @@ then
         --template-file $TEMPLATE_FILE \
         --parameter-overrides file://$PARAMETER_FILE \
         --region $REGION \
+        --capabilities CAPABILITY_NAMED_IAM \
         --no-execute-changeset
 fi
