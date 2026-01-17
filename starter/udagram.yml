@@ -51,31 +51,22 @@ Resources:
           Fn::Base64: !Sub |
             #!/bin/bash
             sudo apt-get update -y
-            sudo apt-get install nginx -y
+            sudo apt-get install -y nginx
+
+            sudo apt install unzip curl -y
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip -o awscliv2.zip
+            sudo ./aws/install
+
+            # Define nginx web root (Ubuntu default)
+            WEB_ROOT="/var/www/html"
+            BUCKET_NAME=!{EnvBucketName}
+
+            sudo rm -r $WEB_ROOT/index.*
+
+            aws s3 cp s3://udagram-bucket-s3-mg-20260112/udagram.html $WEB_ROOT/index.html
             sudo service nginx start
-            WEB_DIR="/var/www/html"
-
-            # Create the index.html file
-            cat <<EOF > index.html
-            <!DOCTYPE html>
-            <html>
-            <head>
-              <title> It works! Udagram, Udacity </title>
-            </head>
-            <body>
-              <h1> It works! Udagram, Udacity </h1>
-              <p> Hosted by Nginx </p>
-            </body>
-            </html>
-            EOF
-
-            # Copy the index.html to the web directory
-            sudo rm -r $WEB_DIR/index.*
-            sudo cp index.html $WEB_DIR
-
-            # Reload nginx to pick up the new index.html file
             sudo systemctl reload nginx
-        
         ImageId: ami-0557a15b87f6559cf
         SecurityGroupIds:
           - !Ref WebServerSecGroup
@@ -110,7 +101,8 @@ Resources:
               - 's3:PutObject'
               - 's3:GetObject'
               Resource:
-                - !GetAtt WebS3Bucket.Arn
+                - arn:aws:s3:::udagram-bucket-s3-mg-20260112/*
+                # - Fn::ImportValue: !Sub "${WebS3Bucket}"
 
   WebAppInstanceProfile:
     Type: AWS::IAM::InstanceProfile
@@ -133,27 +125,6 @@ Resources:
       MaxSize: '3'
       TargetGroupARNs:
       - Ref: WebAppTargetGroup
-
-  WebS3Bucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: !Sub "${EnvBucketName}-s3-mg-20260112"
-      AccessControl: Private
-      VersioningConfiguration:
-        Status: Enabled
-      LifecycleConfiguration:
-        Rules:
-          - Status: "Enabled"
-            NoncurrentVersionExpirationInDays: 10
-      BucketEncryption:
-        ServerSideEncryptionConfiguration:
-          - ServerSideEncryptionByDefault:
-              SSEAlgorithm: AES256
-      PublicAccessBlockConfiguration:
-        BlockPublicAcls: true
-        IgnorePublicAcls: true
-        BlockPublicPolicy: true
-        RestrictPublicBuckets: true
 
   WebAppLB:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
