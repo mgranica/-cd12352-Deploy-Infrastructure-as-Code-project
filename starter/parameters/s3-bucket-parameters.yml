@@ -1,0 +1,6 @@
+[
+	{
+		"ParameterKey": "EnvBucketName",
+		"ParameterValue": "udagram-bucket"
+	}
+]
