@@ -111,7 +111,7 @@ Resources:
   WebS3Bucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub "${EnvironmentName}-s3-mg-20260112"
+      BucketName: "udagram-project-s3-mg-20260112"
       AccessControl: Private
       VersioningConfiguration:
         Status: Enabled
@@ -176,3 +176,9 @@ Resources:
       VpcId: 
         Fn::ImportValue:
           Fn::Sub: "${EnvironmentName}-VPCID"
+
+
+Outputs:
+  LoadBalancerDNSName:
+    Description: "DNS Name of the load balancer"
+    Value: !GetAtt WebAppLB.DNSName
